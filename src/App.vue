@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Teleport } from "vue";
-import { useFloating, autoPlacement } from "./use-floating";
+import { useFloating, autoPlacement } from "./vue-use-floating";
 
 const { x, y, reference, floating, strategy } = useFloating({
 	placement: "bottom-end",

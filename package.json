@@ -2,17 +2,33 @@
 	"name": "vue-floating-ui",
 	"private": true,
 	"version": "0.0.0",
+	"files": [
+		"dist"
+	],
+	"types": "./dist/vue-use-floating.d.ts",
+	"main": "./dist/vue-use-floating.umd.js",
+	"module": "./dist/vue-use-floating.es.js",
+	"exports": {
+		".": {
+			"import": "./dist/vue-use-floating.es.js",
+			"require": "./dist/vue-use-floating.umd.js"
+		}
+	},
 	"scripts": {
 		"dev": "vite",
-		"build": "vue-tsc --noEmit && vite build",
-		"preview": "vite preview"
+		"build": "vue-tsc --noEmit && vite build && npm run generate-types",
+		"preview": "vite preview",
+		"generate-types": "tsc src/vue-use-floating.ts --declaration --emitDeclarationOnly --outDir dist"
 	},
 	"dependencies": {
-		"@floating-ui/dom": "^0.2.0",
-		"vue": "^3.2.25"
+		"@floating-ui/dom": "^0.2.0"
+	},
+	"peerDependencies": {
+		"vue": "^3.0.0"
 	},
 	"devDependencies": {
 		"@allindevelopers/prettier-config": "^1.0.0",
+		"@types/node": "^17.0.19",
 		"@vitejs/plugin-vue": "^2.2.0",
 		"autoprefixer": "^10.4.2",
 		"postcss": "^8.4.6",
@@ -20,6 +36,7 @@
 		"tailwindcss": "^3.0.23",
 		"typescript": "^4.5.4",
 		"vite": "^2.8.0",
+		"vue": "^3.2.31",
 		"vue-tsc": "^0.29.8"
 	},
 	"prettier": "@allindevelopers/prettier-config"
