@@ -7,7 +7,7 @@ export default defineConfig({
 	plugins: [vue()],
 	build: {
 		lib: {
-			formats: ["es"],
+			formats: ["es", "cjs"],
 			entry: path.resolve(__dirname, "src/vue-floating-ui.ts"),
 			fileName: (format) => `vue-floating-ui.${format}.js`,
 		},

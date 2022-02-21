@@ -10,12 +10,12 @@
 		"url": "https://github.com/allindevelopers/vue-floating-ui.git"
 	},
 	"types": "./dist/vue-floating-ui.d.ts",
-	"main": "./dist/vue-floating-ui.umd.js",
+	"main": "./dist/vue-floating-ui.cjs.js",
 	"module": "./dist/vue-floating-ui.es.js",
 	"exports": {
 		".": {
 			"import": "./dist/vue-floating-ui.es.js",
-			"require": "./dist/vue-floating-ui.umd.js"
+			"require": "./dist/vue-floating-ui.cjs.js"
 		}
 	},
 	"scripts": {
