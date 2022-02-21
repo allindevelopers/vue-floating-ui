@@ -7,9 +7,9 @@ export default defineConfig({
 	plugins: [vue()],
 	build: {
 		lib: {
-			entry: path.resolve(__dirname, "src/vue-use-floating.ts"),
+			entry: path.resolve(__dirname, "src/vue-floating-ui.ts"),
 			name: "VueUseFloating",
-			fileName: (format) => `vue-use-floating.${format}.js`,
+			fileName: (format) => `vue-floating-ui.${format}.js`,
 		},
 		rollupOptions: {
 			// make sure to externalize deps that shouldn't be bundled

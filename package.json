@@ -1,24 +1,24 @@
 {
-	"name": "vue-floating-ui",
+	"name": "@allindevelopers/vue-floating-ui",
 	"private": true,
 	"version": "0.0.0",
 	"files": [
 		"dist"
 	],
-	"types": "./dist/vue-use-floating.d.ts",
-	"main": "./dist/vue-use-floating.umd.js",
-	"module": "./dist/vue-use-floating.es.js",
+	"types": "./dist/vue-floating-ui.d.ts",
+	"main": "./dist/vue-floating-ui.umd.js",
+	"module": "./dist/vue-floating-ui.es.js",
 	"exports": {
 		".": {
-			"import": "./dist/vue-use-floating.es.js",
-			"require": "./dist/vue-use-floating.umd.js"
+			"import": "./dist/vue-floating-ui.es.js",
+			"require": "./dist/vue-floating-ui.umd.js"
 		}
 	},
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc --noEmit && vite build && npm run generate-types",
 		"preview": "vite preview",
-		"generate-types": "tsc src/vue-use-floating.ts --declaration --emitDeclarationOnly --outDir dist"
+		"generate-types": "tsc src/vue-floating-ui.ts --declaration --emitDeclarationOnly --outDir dist"
 	},
 	"dependencies": {
 		"@floating-ui/dom": "^0.2.0"
