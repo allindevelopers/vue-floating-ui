@@ -2,6 +2,18 @@
 	"name": "@allindevelopers/vue-floating-ui",
 	"description": "Vue implementation of @floating-ui/react-dom",
 	"version": "1.0.0",
+	"license": "MIT",
+	"author": "Andrew Luca (https://iamandrewluca.com)",
+	"sideEffects": false,
+	"keywords": [
+		"tooltip",
+		"popover",
+		"dropdown",
+		"menu",
+		"popup",
+		"positioning",
+		"vue"
+	],
 	"files": [
 		"dist"
 	],
@@ -9,6 +21,7 @@
 		"type": "git",
 		"url": "https://github.com/allindevelopers/vue-floating-ui.git"
 	},
+	"bugs": "https://github.com/allindevelopers/vue-floating-ui/issues",
 	"types": "./dist/vue-floating-ui.d.ts",
 	"main": "./dist/vue-floating-ui.cjs.js",
 	"module": "./dist/vue-floating-ui.es.js",
