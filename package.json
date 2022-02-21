@@ -18,7 +18,8 @@
 		"dev": "vite",
 		"build": "vue-tsc --noEmit && vite build && npm run generate-types",
 		"preview": "vite preview",
-		"generate-types": "tsc src/vue-floating-ui.ts --declaration --emitDeclarationOnly --outDir dist"
+		"generate-types": "tsc src/vue-floating-ui.ts --declaration --emitDeclarationOnly --outDir dist",
+		"test": "exit 0"
 	},
 	"dependencies": {
 		"@floating-ui/dom": "^0.2.0"
