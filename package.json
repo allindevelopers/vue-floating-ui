@@ -5,6 +5,10 @@
 	"files": [
 		"dist"
 	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/allindevelopers/vue-floating-ui.git"
+	},
 	"types": "./dist/vue-floating-ui.d.ts",
 	"main": "./dist/vue-floating-ui.umd.js",
 	"module": "./dist/vue-floating-ui.es.js",
