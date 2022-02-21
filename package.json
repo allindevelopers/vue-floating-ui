@@ -1,7 +1,7 @@
 {
 	"name": "@allindevelopers/vue-floating-ui",
 	"description": "Vue implementation of @floating-ui/react-dom",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"files": [
 		"dist"
 	],
