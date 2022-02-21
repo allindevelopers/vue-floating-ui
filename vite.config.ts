@@ -7,21 +7,12 @@ export default defineConfig({
 	plugins: [vue()],
 	build: {
 		lib: {
+			formats: ["es"],
 			entry: path.resolve(__dirname, "src/vue-floating-ui.ts"),
-			name: "VueUseFloating",
 			fileName: (format) => `vue-floating-ui.${format}.js`,
 		},
 		rollupOptions: {
-			// make sure to externalize deps that shouldn't be bundled
-			// into your library
-			external: ["vue"],
-			output: {
-				// Provide global variables to use in the UMD build
-				// for externalized deps
-				globals: {
-					vue: "Vue",
-				},
-			},
+			external: ["vue", "@floating-ui/core", "@floating-ui/dom"],
 		},
 	},
 });

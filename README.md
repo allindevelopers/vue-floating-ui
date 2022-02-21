@@ -1,7 +1,41 @@
-# @allindevelopers/vue-floating-ui
+# `@allindevelopers/vue-floating-ui`
 
 Vue implementation of [@floating-ui/react-dom](https://floating-ui.com/docs/react-dom)
+
 Same core documentation applies.
+
+## Install
+
+```shell
+npm install @allindevelopers/vue-floating-ui
+```
+
+## Usage
+
+```vue
+<script setup lang="ts">
+import { useFloating, autoPlacement } from "./vue-floating-ui";
+
+const { x, y, reference, floating, strategy } = useFloating({
+	placement: "bottom",
+	middleware: [autoPlacement()],
+});
+</script>
+
+<template>
+	<button ref="reference">Button</button>
+	<div
+		ref="floating"
+		:style="{
+			position: strategy,
+			top: y ? `${y}px` : '',
+			left: x ? `${x}px` : '',
+		}"
+	>
+		Tooltip
+	</div>
+</template>
+```
 
 # Vue 3 + Typescript + Vite
 

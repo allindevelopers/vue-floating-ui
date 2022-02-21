@@ -3,7 +3,7 @@ import { Teleport } from "vue";
 import { useFloating, autoPlacement } from "./vue-floating-ui";
 
 const { x, y, reference, floating, strategy } = useFloating({
-	placement: "bottom-end",
+	placement: "bottom",
 	middleware: [autoPlacement()],
 });
 </script>
