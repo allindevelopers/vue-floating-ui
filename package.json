@@ -39,5 +39,8 @@
 		"vue": "^3.2.31",
 		"vue-tsc": "^0.29.8"
 	},
-	"prettier": "@allindevelopers/prettier-config"
+	"prettier": "@allindevelopers/prettier-config",
+	"publishConfig": {
+		"access": "public"
+	}
 }
