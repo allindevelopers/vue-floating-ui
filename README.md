@@ -14,7 +14,7 @@ npm install @allindevelopers/vue-floating-ui
 
 ```vue
 <script setup lang="ts">
-import { useFloating, autoPlacement } from "./vue-floating-ui";
+import { useFloating, autoPlacement } from "@allindevelopers/vue-floating-ui";
 
 const { x, y, reference, floating, strategy } = useFloating({
 	placement: "bottom",
