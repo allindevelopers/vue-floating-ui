@@ -4,6 +4,9 @@ Vue implementation of [@floating-ui/react-dom](https://floating-ui.com/docs/reac
 
 Same core documentation applies.
 
+[youtube]: https://i3.ytimg.com/vi/Vi480Rjdevo/maxresdefault.jpg
+[![youtube]](https://youtu.be/Vi480Rjdevo)
+
 ## Install
 
 ```shell
