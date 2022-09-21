@@ -67,8 +67,7 @@ export function useFloating({
 		});
 	};
 
-	watch(reference, update);
-	watch(floating, update);
+	watch([reference, floating], update);
 
 	return {
 		x,
