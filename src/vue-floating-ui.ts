@@ -5,6 +5,7 @@ import type {
 	SideObject,
 	Placement,
 	MiddlewareData,
+	Strategy,
 } from "@floating-ui/core";
 import { computePosition, arrow as arrowCore } from "@floating-ui/dom";
 import { ref, Ref, ToRefs, watch, isRef } from "vue";
@@ -34,19 +35,19 @@ type UseFloatingReturn = ToRefs<Data> & {
 };
 
 export function useFloating({
-	// TODO: reactive
-	middleware,
-	placement,
-	strategy,
 }: Omit<Partial<ComputePositionConfig>, "platform"> = {}): UseFloatingReturn {
+	middleware = [],
+	placement = "bottom",
+	strategy = "absolute",
 	const reference = ref<Element | null>(null);
 	const floating = ref<HTMLElement | null>(null);
 	// Setting these to `null` will allow the consumer to determine if
 	// `computePosition()` has run yet
 	const x = ref<number | null>(null);
 	const y = ref<number | null>(null);
-	const _strategy = ref(strategy ?? "absolute");
-	const _placement = ref<Placement>("bottom");
+	const _placement = ref<Placement>(placement);
+	const _strategy = ref<Strategy>(strategy);
+	const _middleware = ref<Middleware[]>(middleware);
 	const middlewareData = ref<MiddlewareData>({});
 
 	const update = () => {
@@ -55,9 +56,9 @@ export function useFloating({
 		}
 
 		computePosition(reference.value, floating.value, {
-			middleware,
-			placement,
-			strategy,
+			middleware: _middleware.value,
+			placement: _placement.value,
+			strategy: _strategy.value,
 		}).then((data) => {
 			x.value = data.x;
 			y.value = data.y;
@@ -67,7 +68,8 @@ export function useFloating({
 		});
 	};
 
-	watch([reference, floating], update);
+	watch([reference, floating, _placement, _strategy], update);
+	watch(_middleware, update, { deep: true });
 
 	return {
 		x,
