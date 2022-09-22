@@ -18,7 +18,7 @@ export {
 	limitShift,
 	size,
 	inline,
-	getScrollParents,
+	getOverflowAncestors,
 	detectOverflow,
 } from "@floating-ui/dom";
 
