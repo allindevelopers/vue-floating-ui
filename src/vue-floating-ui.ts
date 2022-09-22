@@ -21,6 +21,7 @@ export {
 	inline,
 	getOverflowAncestors,
 	detectOverflow,
+	autoUpdate,
 } from "@floating-ui/dom";
 
 type Data = Omit<ComputePositionReturn, "x" | "y"> & {
@@ -34,11 +35,20 @@ type UseFloatingReturn = ToRefs<Data> & {
 	floating: Ref<HTMLElement | null>;
 };
 
+type UseFloatingProps = Omit<Partial<ComputePositionConfig>, "platform"> & {
+	whileElementsMounted?: (
+		reference: Element | null,
+		floating: HTMLElement | null,
+		update: () => void,
+	) => void | (() => void) | null;
+};
+
 export function useFloating({
-}: Omit<Partial<ComputePositionConfig>, "platform"> = {}): UseFloatingReturn {
 	middleware = [],
 	placement = "bottom",
 	strategy = "absolute",
+	whileElementsMounted,
+}: UseFloatingProps = {}): UseFloatingReturn {
 	const reference = ref<Element | null>(null);
 	const floating = ref<HTMLElement | null>(null);
 	// Setting these to `null` will allow the consumer to determine if
@@ -49,6 +59,7 @@ export function useFloating({
 	const _strategy = ref<Strategy>(strategy);
 	const _middleware = ref<Middleware[]>(middleware);
 	const middlewareData = ref<MiddlewareData>({});
+	const cleanupRef = ref<Function | void | null>(null);
 
 	const update = () => {
 		if (!reference.value || !floating.value) {
@@ -68,8 +79,29 @@ export function useFloating({
 		});
 	};
 
-	watch([reference, floating, _placement, _strategy], update);
+	watch([_placement, _strategy], update);
 	watch(_middleware, update, { deep: true });
+
+	watch([reference, floating], () => {
+		if (cleanupRef.value) {
+			cleanupRef.value();
+			cleanupRef.value = null;
+		}
+
+		if (!reference.value || !floating.value) {
+			return;
+		}
+
+		if (whileElementsMounted) {
+			cleanupRef.value = whileElementsMounted(
+				reference.value,
+				floating.value,
+				update,
+			);
+		} else {
+			update();
+		}
+	});
 
 	return {
 		x,
