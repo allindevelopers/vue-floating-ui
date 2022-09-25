@@ -1,25 +1,32 @@
 <script setup lang="ts">
+import { Placement, Strategy } from "@floating-ui/core";
 import { Teleport, ref } from "vue";
 import { useFloating, flip, shift, autoUpdate } from "./vue-floating-ui";
 
-const placement = ref('top')
-const strategy = ref('fixed')
-const middleware = ref([flip(), shift()])
-const { x, y, reference, floating, strategy: computedStrategy } = useFloating({
+const placement = ref<Placement>("top");
+const strategy = ref<Strategy>("fixed");
+const middleware = ref([flip(), shift()]);
+const {
+	x,
+	y,
+	reference,
+	floating,
+	strategy: computedStrategy,
+} = useFloating({
 	placement,
 	strategy,
 	middleware,
-	whileElementsMounted: autoUpdate
+	whileElementsMounted: autoUpdate,
 });
 
 function togglePlacement() {
-	placement.value = placement.value === 'top' ? 'right' : 'top'
+	placement.value = placement.value === "top" ? "right" : "top";
 }
 function toggleStrategy() {
-	strategy.value = strategy.value === 'fixed' ? 'absolute' : 'fixed'
+	strategy.value = strategy.value === "fixed" ? "absolute" : "fixed";
 }
 function toggleMiddleware() {
-	middleware.value = middleware.value.length  ? [] : [flip(), shift()]
+	middleware.value = middleware.value.length ? [] : [flip(), shift()];
 }
 </script>
 
@@ -41,10 +48,12 @@ function toggleMiddleware() {
 			class="px-2 text-sm py-1 bg-gray-900 text-gray-100 rounded inline-block"
 			@click="toggleMiddleware"
 		>
-			Toggle middleware: {{ middleware.length ? 'on' : 'off '}}
+			Toggle middleware: {{ middleware.length ? "on" : "off " }}
 		</button>
 	</div>
-	<button ref="reference" class="px-3 py-2 bg-gray-100 rounded inline-block"
+	<button
+		ref="reference"
+		class="px-3 py-2 bg-gray-100 rounded inline-block"
 		:style="{ position: strategy === 'fixed' ? 'fixed' : undefined }"
 	>
 		Button lorem ipsum dolor

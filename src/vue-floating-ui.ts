@@ -1,5 +1,4 @@
 import type {
-	ComputePositionConfig,
 	ComputePositionReturn,
 	Middleware,
 	SideObject,
@@ -7,7 +6,12 @@ import type {
 	MiddlewareData,
 	Strategy,
 } from "@floating-ui/core";
-import { computePosition, arrow as arrowCore } from "@floating-ui/dom";
+import {
+	computePosition,
+	arrow as arrowCore,
+	ReferenceElement,
+	FloatingElement,
+} from "@floating-ui/dom";
 import { ref, Ref, ToRefs, watch, isRef } from "vue";
 
 export {
@@ -31,14 +35,19 @@ type Data = Omit<ComputePositionReturn, "x" | "y"> & {
 
 type UseFloatingReturn = ToRefs<Data> & {
 	update: () => void;
-	reference: Ref<Element | null>;
-	floating: Ref<HTMLElement | null>;
+	reference: Ref<ReferenceElement | null>;
+	floating: Ref<FloatingElement | null>;
 };
 
-type UseFloatingProps = Omit<Partial<ComputePositionConfig>, "platform"> & {
+type MaybeRef<T> = Ref<T> | T;
+
+type UseFloatingProps = {
+	placement?: MaybeRef<Placement>;
+	strategy?: MaybeRef<Strategy>;
+	middleware?: MaybeRef<Array<Middleware>>;
 	whileElementsMounted?: (
-		reference: Element | null,
-		floating: HTMLElement | null,
+		reference: ReferenceElement,
+		floating: FloatingElement,
 		update: () => void,
 	) => void | (() => void) | null;
 };
@@ -49,15 +58,15 @@ export function useFloating({
 	strategy = "absolute",
 	whileElementsMounted,
 }: UseFloatingProps = {}): UseFloatingReturn {
-	const reference = ref<Element | null>(null);
-	const floating = ref<HTMLElement | null>(null);
+	const reference = ref<ReferenceElement | null>(null);
+	const floating = ref<FloatingElement | null>(null);
 	// Setting these to `null` will allow the consumer to determine if
 	// `computePosition()` has run yet
 	const x = ref<number | null>(null);
 	const y = ref<number | null>(null);
-	const _placement = ref<Placement>(placement);
-	const _strategy = ref<Strategy>(strategy);
-	const _middleware = ref<Middleware[]>(middleware);
+	const _placement = ref(placement);
+	const _strategy = ref(strategy);
+	const _middleware = ref(middleware);
 	const middlewareData = ref<MiddlewareData>({});
 	const cleanupRef = ref<Function | void | null>(null);
 
