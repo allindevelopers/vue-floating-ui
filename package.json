@@ -39,7 +39,7 @@
 		"test": "exit 0"
 	},
 	"dependencies": {
-		"@floating-ui/dom": "^0.2.0"
+		"@floating-ui/dom": "^1.0.2"
 	},
 	"peerDependencies": {
 		"vue": "^3.0.0"

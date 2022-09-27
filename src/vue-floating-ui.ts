@@ -1,13 +1,18 @@
 import type {
-	ComputePositionConfig,
 	ComputePositionReturn,
 	Middleware,
 	SideObject,
 	Placement,
 	MiddlewareData,
+	Strategy,
 } from "@floating-ui/core";
-import { computePosition, arrow as arrowCore } from "@floating-ui/dom";
-import { ref, Ref, ToRefs, watch, isRef } from "vue";
+import {
+	computePosition,
+	arrow as arrowCore,
+	ReferenceElement,
+	FloatingElement,
+} from "@floating-ui/dom";
+import { ref, Ref, ToRefs, watch, isRef, toRefs, unref, reactive } from "vue";
 
 export {
 	autoPlacement,
@@ -18,8 +23,9 @@ export {
 	limitShift,
 	size,
 	inline,
-	getScrollParents,
+	getOverflowAncestors,
 	detectOverflow,
+	autoUpdate,
 } from "@floating-ui/dom";
 
 type Data = Omit<ComputePositionReturn, "x" | "y"> & {
@@ -29,25 +35,42 @@ type Data = Omit<ComputePositionReturn, "x" | "y"> & {
 
 type UseFloatingReturn = ToRefs<Data> & {
 	update: () => void;
-	reference: Ref<Element | null>;
-	floating: Ref<HTMLElement | null>;
+	reference: Ref<ReferenceElement | null>;
+	floating: Ref<FloatingElement | null>;
+};
+
+type MaybeRef<T> = Ref<T> | T;
+
+type UseFloatingProps = {
+	placement?: MaybeRef<Placement>;
+	strategy?: MaybeRef<Strategy>;
+	middleware?: MaybeRef<Array<Middleware>>;
+	whileElementsMounted?: (
+		reference: ReferenceElement,
+		floating: FloatingElement,
+		update: () => void,
+	) => void | (() => void) | null;
 };
 
 export function useFloating({
-	// TODO: reactive
-	middleware,
-	placement,
-	strategy,
-}: Omit<Partial<ComputePositionConfig>, "platform"> = {}): UseFloatingReturn {
-	const reference = ref<Element | null>(null);
-	const floating = ref<HTMLElement | null>(null);
+	middleware = [],
+	placement = "bottom",
+	strategy = "absolute",
+	whileElementsMounted,
+}: UseFloatingProps = {}): UseFloatingReturn {
+	const reference = ref<ReferenceElement | null>(null);
+	const floating = ref<FloatingElement | null>(null);
+	const middlewareRef = ref(middleware);
+	const cleanupRef = ref<Function | void | null>(null);
 	// Setting these to `null` will allow the consumer to determine if
 	// `computePosition()` has run yet
-	const x = ref<number | null>(null);
-	const y = ref<number | null>(null);
-	const _strategy = ref(strategy ?? "absolute");
-	const _placement = ref<Placement>("bottom");
-	const middlewareData = ref<MiddlewareData>({});
+	const data = reactive<Data>({
+		x: null,
+		y: null,
+		placement: unref(placement),
+		strategy: unref(strategy),
+		middlewareData: {},
+	});
 
 	const update = () => {
 		if (!reference.value || !floating.value) {
@@ -55,27 +78,40 @@ export function useFloating({
 		}
 
 		computePosition(reference.value, floating.value, {
-			middleware,
-			placement,
-			strategy,
-		}).then((data) => {
-			x.value = data.x;
-			y.value = data.y;
-			_placement.value = data.placement;
-			_strategy.value = data.strategy;
-			middlewareData.value = data.middlewareData;
+			middleware: unref(middlewareRef),
+			placement: unref(placement),
+			strategy: unref(strategy),
+		}).then((computedData) => {
+			Object.assign(data, computedData);
 		});
 	};
 
-	watch(reference, update);
-	watch(floating, update);
+	watch([placement, strategy], update);
+	watch(middlewareRef, update, { deep: true });
+
+	watch([reference, floating], () => {
+		if (cleanupRef.value) {
+			cleanupRef.value();
+			cleanupRef.value = null;
+		}
+
+		if (!reference.value || !floating.value) {
+			return;
+		}
+
+		if (whileElementsMounted) {
+			cleanupRef.value = whileElementsMounted(
+				reference.value,
+				floating.value,
+				update,
+			);
+		} else {
+			update();
+		}
+	});
 
 	return {
-		x,
-		y,
-		strategy: _strategy,
-		placement: _placement,
-		middlewareData,
+		...toRefs(data),
 		update,
 		reference,
 		floating,
