@@ -12,7 +12,7 @@ import {
 	ReferenceElement,
 	FloatingElement,
 } from "@floating-ui/dom";
-import { ref, Ref, ToRefs, watch, isRef } from "vue";
+import { ref, Ref, ToRefs, watch, isRef, toRefs, unref, reactive } from "vue";
 
 export {
 	autoPlacement,
@@ -60,15 +60,17 @@ export function useFloating({
 }: UseFloatingProps = {}): UseFloatingReturn {
 	const reference = ref<ReferenceElement | null>(null);
 	const floating = ref<FloatingElement | null>(null);
+	const middlewareRef = ref(middleware);
+	const cleanupRef = ref<Function | void | null>(null);
 	// Setting these to `null` will allow the consumer to determine if
 	// `computePosition()` has run yet
-	const x = ref<number | null>(null);
-	const y = ref<number | null>(null);
-	const _placement = ref(placement);
-	const _strategy = ref(strategy);
-	const _middleware = ref(middleware);
-	const middlewareData = ref<MiddlewareData>({});
-	const cleanupRef = ref<Function | void | null>(null);
+	const data = reactive<Data>({
+		x: null,
+		y: null,
+		placement: unref(placement),
+		strategy: unref(strategy),
+		middlewareData: {},
+	});
 
 	const update = () => {
 		if (!reference.value || !floating.value) {
@@ -76,20 +78,16 @@ export function useFloating({
 		}
 
 		computePosition(reference.value, floating.value, {
-			middleware: _middleware.value,
-			placement: _placement.value,
-			strategy: _strategy.value,
-		}).then((data) => {
-			x.value = data.x;
-			y.value = data.y;
-			_placement.value = data.placement;
-			_strategy.value = data.strategy;
-			middlewareData.value = data.middlewareData;
+			middleware: unref(middlewareRef),
+			placement: unref(placement),
+			strategy: unref(strategy),
+		}).then((computedData) => {
+			Object.assign(data, computedData);
 		});
 	};
 
-	watch([_placement, _strategy], update);
-	watch(_middleware, update, { deep: true });
+	watch([placement, strategy], update);
+	watch(middlewareRef, update, { deep: true });
 
 	watch([reference, floating], () => {
 		if (cleanupRef.value) {
@@ -113,11 +111,7 @@ export function useFloating({
 	});
 
 	return {
-		x,
-		y,
-		strategy: _strategy,
-		placement: _placement,
-		middlewareData,
+		...toRefs(data),
 		update,
 		reference,
 		floating,

@@ -12,6 +12,7 @@ const {
 	reference,
 	floating,
 	strategy: computedStrategy,
+	placement: computedPlacement,
 } = useFloating({
 	placement,
 	strategy,
@@ -36,13 +37,13 @@ function toggleMiddleware() {
 			class="px-2 text-sm py-1 bg-gray-900 text-gray-100 rounded inline-block"
 			@click="togglePlacement"
 		>
-			Toggle placement: {{ placement }}
+			Toggle placement: {{ placement }} | {{ computedPlacement }}
 		</button>
 		<button
 			class="px-2 text-sm py-1 bg-gray-900 text-gray-100 rounded inline-block"
 			@click="toggleStrategy"
 		>
-			Toggle strategy: {{ strategy }}
+			Toggle strategy: {{ strategy }} | {{ computedStrategy }}
 		</button>
 		<button
 			class="px-2 text-sm py-1 bg-gray-900 text-gray-100 rounded inline-block"
